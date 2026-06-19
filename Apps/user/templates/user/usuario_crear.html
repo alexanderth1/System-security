@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta - Sistema Seguro</title>
+    <style>
+        /* ── 1. ESTILOS GLOBALES ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f13; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* ── HEADER ── */
+        .header { background: #13131a; border-bottom: 0.5px solid rgba(255, 255, 255, 0.08); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .header__logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .header__logo-icon { width: 32px; height: 32px; background: rgba(99, 102, 241, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .header__logo-icon svg { width: 18px; height: 18px; stroke: #6366f1; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .header__logo-name { font-size: 15px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+
+        /* ── FOOTER ── */
+        .footer { background: #13131a; border-top: 0.5px solid rgba(255, 255, 255, 0.08); padding: 1.25rem 2rem; margin-top: auto; }
+        .footer__inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .footer__brand { display: flex; align-items: center; gap: 8px; }
+        .footer__brand span { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.4); }
+        .footer__brand strong { color: rgba(255, 255, 255, 0.6); }
+        .footer__links { display: flex; gap: 1.5rem; }
+        .footer__links a { font-size: 12px; color: rgba(255, 255, 255, 0.3); text-decoration: none; transition: color 0.15s; }
+        .footer__links a:hover { color: rgba(255, 255, 255, 0.6); }
+        .footer__copy { font-size: 12px; color: rgba(255, 255, 255, 0.2); }
+
+        /* ── MAIN ── */
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+
+        /* ── 2. ESTILOS ESPECÍFICOS DEL REGISTRO ── */
+        .login-card { background: #1a1a22; border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2.5rem 2rem; width: 100%; max-width: 480px; }
+        .login-card__icon { width: 48px; height: 48px; background: rgba(99, 102, 241, 0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+        .login-card__icon svg { width: 24px; height: 24px; stroke: #6366f1; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .login-card h1 { font-size: 20px; font-weight: 600; color: #fff; text-align: center; margin-bottom: 6px; }
+        .login-card__subtitle { font-size: 13px; color: rgba(255, 255, 255, 0.4); text-align: center; margin-bottom: 2rem; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .field { margin-bottom: 1.25rem; }
+        .field label { display: block; font-size: 11px; font-weight: 600; color: rgba(255, 255, 255, 0.45); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+
+        .field__wrap { position: relative; }
+        .field__wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: rgba(255, 255, 255, 0.25); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+        .field__wrap input { width: 100%; background: rgba(255, 255, 255, 0.05); border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 10px 12px 10px 38px; font-size: 14px; color: #fff; outline: none; transition: border-color 0.15s, background 0.15s; font-family: inherit; }
+        .field__wrap input:focus { border-color: rgba(99, 102, 241, 0.55); background: rgba(99, 102, 241, 0.06); }
+
+        .btn-submit { width: 100%; background: #6366f1; border: none; border-radius: 10px; padding: 11px; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s, transform 0.1s; font-family: inherit; margin-top: 1rem; }
+        .btn-submit:hover { background: #5254cc; }
+
+        .btn-secondary { width: 100%; background: transparent; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 11px; font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.6); cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s; margin-top: 1.5rem; }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+
+        .divider { display: flex; align-items: center; gap: 10px; margin: 1.5rem 0 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 0.5px; background: rgba(255, 255, 255, 0.08); }
+        .divider span { font-size: 11px; color: rgba(255, 255, 255, 0.2); }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="{% url 'login' %}" class="header__logo">
+            <div class="header__logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6l-8-4z"/></svg>
+            </div>
+            <span class="header__logo-name">Sistema Seguro</span>
+        </a>
+    </header>
+
+    <main>
+        <div class="login-card">
+
+            <div class="login-card__icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <line x1="19" y1="8" x2="19" y2="14"/>
+                    <line x1="22" y1="11" x2="16" y2="11"/>
+                </svg>
+            </div>
+
+            <h1>Crear Usuario</h1>
+            <p class="login-card__subtitle">Registra un nuevo miembro en el sistema</p>
+
+            <form method="post" action="{% url 'usuario_crear' %}">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <div class="field">
+                        <label for="id_first_name">Nombre</label>
+                        <div class="field__wrap">
+                            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <input type="text" id="id_first_name" name="first_name" placeholder="Nombre" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="id_last_name">Apellido</label>
+                        <div class="field__wrap">
+                            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <input type="text" id="id_last_name" name="last_name" placeholder="Apellido" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="field">
+                        <label for="id_cedula">Nro. de Cédula</label>
+                        <div class="field__wrap">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="13" y2="16"/></svg>
+                            <input type="text" id="id_cedula" name="cedula" placeholder="09XXXXXXXX" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="id_phone">Teléfono</label>
+                        <div class="field__wrap">
+                            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <input type="tel" id="id_phone" name="phone" placeholder="+593" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="id_email">Correo Electrónico</label>
+                    <div class="field__wrap">
+                        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        <input type="email" id="id_email" name="email" placeholder="usuario@empresa.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="field">
+                        <label for="id_password">Contraseña</label>
+                        <div class="field__wrap">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            <input type="password" id="id_password" name="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="id_confirm">Confirmar</label>
+                        <div class="field__wrap">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <input type="password" id="id_confirm" name="confirm_password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                     Registrar Cuenta
+                </button>
+            </form>
+
+            <a href="{% url 'login' %}" class="btn-secondary">
+                Volver al inicio de sesión
+            </a>
+
+            <div class="divider"><span>SystemSecurity · Registro</span></div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__inner">
+            <div class="footer__brand">
+                <span>© 2026 <strong>Sistema Seguro</strong></span>
+            </div>
+            <div class="footer__links">
+                <a href="#">Privacidad</a>
+                <a href="#">Términos</a>
+                <a href="#">Soporte</a>
+            </div>
+            <span class="footer__copy">Todos los derechos reservados</span>
+        </div>
+    </footer>
+
+</body>
+</html>

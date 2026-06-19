@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Perfil - Sistema Seguro{% endblock %}
+
+{% block main_style %}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+{% endblock %}
+
+{% block extra_styles %}
+/* Tarjeta ampliada para el formulario completo */
+.edit-card {
+    background: #1a1a22;
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2.5rem 2.5rem;
+    width: 100%;
+    max-width: 650px;
+}
+
+.edit-card__header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.edit-card__icon {
+    width: 48px; height: 48px;
+    background: rgba(99, 102, 241, 0.12);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+    color: #6366f1;
+}
+
+.edit-card__icon svg {
+    width: 24px; height: 24px;
+    stroke: currentColor; fill: none; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+}
+
+.edit-card h1 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+.edit-card p { font-size: 13px; color: rgba(255, 255, 255, 0.4); }
+
+/* Títulos de sección */
+.section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #818cf8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 1.5rem 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Sistema de Rejilla */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+.field { margin-bottom: 1.25rem; }
+.field label { display: block; font-size: 11px; font-weight: 600; color: rgba(255, 255, 255, 0.45); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+
+.field__wrap { position: relative; }
+.field__wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: rgba(255, 255, 255, 0.25); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.field__wrap input { width: 100%; background: rgba(255, 255, 255, 0.05); border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 10px 12px 10px 38px; font-size: 14px; color: #fff; outline: none; transition: border-color 0.15s, background 0.15s; font-family: inherit; }
+.field__wrap input:focus { border-color: rgba(99, 102, 241, 0.55); background: rgba(99, 102, 241, 0.06); }
+
+/* Ajuste para inputs que puedan estar bloqueados o de lectura */
+.field__wrap input:disabled { background: rgba(0, 0, 0, 0.2); color: rgba(255, 255, 255, 0.3); cursor: not-allowed; }
+
+.btn-submit { width: 100%; background: #6366f1; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s; font-family: inherit; margin-top: 1.5rem; }
+.btn-submit:hover { background: #5254cc; }
+
+.btn-secondary { width: 100%; background: transparent; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.6); cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s; margin-top: 1rem; gap: 6px;}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+
+/* Para pantallas de móviles */
+@media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; gap: 0; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="edit-card">
+    <div class="edit-card__header">
+        <div class="edit-card__icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <h1>Perfil del {{ request.session.user_role|default:"Usuario" }}</h1>
+        <p>Actualiza tu información personal y datos de ubicación</p>
+    </div>
+
+    <form method="post" action="{% url 'usuario_editar' %}">
+        {% csrf_token %}
+
+        <h3 class="section-title">Datos Personales</h3>
+        <div class="form-row">
+            <div class="field">
+                <label>Nombre</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <input type="text" name="first_name" value="{{ usuario.first_name }}" placeholder="Ej. Juan">
+                </div>
+            </div>
+            <div class="field">
+                <label>Apellido</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <input type="text" name="last_name" value="{{ usuario.last_name }}" placeholder="Ej. Pérez">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="field">
+                <label>Teléfono</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <input type="tel" name="phone" value="{{ usuario.phone }}" placeholder="+593 99 123 4567">
+                </div>
+            </div>
+            <div class="field">
+                <label>Correo Electrónico</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <input type="email" name="email" value="{{ usuario.email }}" placeholder="usuario@empresa.com">
+                </div>
+            </div>
+        </div>
+
+        <h3 class="section-title">Ubicación de Residencia</h3>
+        <div class="form-row">
+            <div class="field">
+                <label>Provincia</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <input type="text" name="provincia" value="{{ usuario.provincia }}" placeholder="Ej. Guayas">
+                </div>
+            </div>
+            <div class="field">
+                <label>Cantón</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <input type="text" name="canton" value="{{ usuario.canton }}" placeholder="Ej. Durán">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="field">
+                <label>Parroquia</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                    <input type="text" name="parroquia" value="{{ usuario.parroquia }}" placeholder="Ej. Eloy Alfaro">
+                </div>
+            </div>
+            <div class="field">
+                <label>Número de Casa / Villa</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <input type="text" name="numero_casa" value="{{ usuario.numero_casa }}" placeholder="Mz. 12, Villa 5">
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Referencia de Ubicación</label>
+            <div class="field__wrap">
+                <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+                <input type="text" name="referencia" value="{{ usuario.referencia }}" placeholder="Ej. Frente al parque central, casa color azul">
+            </div>
+        </div>
+
+        <h3 class="section-title">Seguridad</h3>
+        <p style="font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 1rem;">Déjalo en blanco si no deseas cambiar tu contraseña actual.</p>
+
+        <div class="form-row">
+            <div class="field">
+                <label>Nueva Contraseña</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <input type="password" name="password" placeholder="••••••••">
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Confirmar Contraseña</label>
+                <div class="field__wrap">
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <input type="password" name="confirm_password" placeholder="••••••••">
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Guardar Todos los Cambios
+        </button>
+    </form>
+
+    <a href="{% url 'dashboard' %}" class="btn-secondary">Cancelar y volver al Panel</a>
+</div>
+{% endblock %}

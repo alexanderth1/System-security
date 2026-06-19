@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema Seguro{% endblock %}</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0f0f13;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: #13131a;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+            padding: 0 2rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header__logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .header__logo-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(99, 102, 241, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header__logo-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: #6366f1;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .header__logo-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.01em;
+        }
+
+        .header__nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header__nav a {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .header__nav a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .header__nav a.active {
+            color: #fff;
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        .header__actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header__actions .btn-icon {
+            width: 34px;
+            height: 34px;
+            background: transparent;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.15s;
+        }
+
+        .header__actions .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+
+        .header__actions .btn-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ── DROPDOWN MENÚ DE USUARIO ── */
+        .header__dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .header__user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 10px 4px 4px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .header__user:hover { background: rgba(255, 255, 255, 0.05); }
+
+        .header__avatar {
+            width: 26px;
+            height: 26px;
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #a5b4fc;
+        }
+
+        .header__username {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Caja oculta del menú */
+        .header__dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 110%;
+            background: #13131a;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            min-width: 180px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            overflow: hidden;
+            z-index: 200;
+        }
+
+        /* Mostrar al hacer hover */
+        .header__dropdown:hover .header__dropdown-menu {
+            display: block;
+        }
+
+        .header__dropdown-menu a {
+            color: rgba(255, 255, 255, 0.7);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .header__dropdown-menu a:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #fff;
+        }
+
+        .header__dropdown-menu svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.05);
+            margin: 4px 0;
+        }
+
+        .logout-link {
+            color: #f87171 !important;
+        }
+
+        .logout-link:hover {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: #fca5a5 !important;
+        }
+
+        /* ── MAIN ── */
+        main {
+            flex: 1;
+            {% block main_style %}{% endblock %}
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: #13131a;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 2rem;
+        }
+
+        .footer__inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer__brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer__brand span {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .footer__brand strong {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .footer__links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer__links a {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .footer__links a:hover { color: rgba(255, 255, 255, 0.6); }
+
+        .footer__copy {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        {% block extra_styles %}{% endblock %}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="{% url 'dashboard' %}" class="header__logo">
+            <div class="header__logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6l-8-4z"/>
+                </svg>
+            </div>
+            <span class="header__logo-name">Sistema Seguro</span>
+        </a>
+
+        <div class="header__actions">
+            <button class="btn-icon" title="Notificaciones">
+                <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </button>
+
+            <div class="header__dropdown">
+                <div class="header__user">
+                    <div class="header__avatar">{{ request.session.user_role|slice:":2"|upper|default:"AD" }}</div>
+                    <span class="header__username">{{ request.session.user_role|default:"Administrador" }}</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 2px;"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+
+                <div class="header__dropdown-menu">
+                    <a href="{% url 'usuario_editar' %}">
+                        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Editar perfil
+                    </a>
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        Configuración
+                    </a>
+                    <div class="menu-divider"></div>
+                    <a href="{% url 'cerrar_sesion' %}" class="logout-link">
+                        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        Cerrar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer__inner">
+            <div class="footer__brand">
+                <span>© 2026 <strong>Sistema Seguro</strong></span>
+            </div>
+            <div class="footer__links">
+                <a href="#">Privacidad</a>
+                <a href="#">Términos</a>
+                <a href="#">Soporte</a>
+            </div>
+            <span class="footer__copy">Todos los derechos reservados</span>
+        </div>
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

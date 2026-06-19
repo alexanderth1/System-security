@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Sistema Seguro</title>
+    <style>
+        /* ── ESTILOS GLOBALES ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f13; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* ── HEADER & FOOTER ── */
+        .header { background: #13131a; border-bottom: 0.5px solid rgba(255, 255, 255, 0.08); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .header__logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .header__logo-icon { width: 32px; height: 32px; background: rgba(99, 102, 241, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .header__logo-icon svg { width: 18px; height: 18px; stroke: #6366f1; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .header__logo-name { font-size: 15px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+        .footer { background: #13131a; border-top: 0.5px solid rgba(255, 255, 255, 0.08); padding: 1.25rem 2rem; margin-top: auto; }
+        .footer__inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .footer__brand { display: flex; align-items: center; gap: 8px; }
+        .footer__brand span { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.4); }
+        .footer__brand strong { color: rgba(255, 255, 255, 0.6); }
+        .footer__links { display: flex; gap: 1.5rem; }
+        .footer__links a { font-size: 12px; color: rgba(255, 255, 255, 0.3); text-decoration: none; transition: color 0.15s; }
+        .footer__links a:hover { color: rgba(255, 255, 255, 0.6); }
+        .footer__copy { font-size: 12px; color: rgba(255, 255, 255, 0.2); }
+
+        /* ── MAIN ── */
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 3rem 1rem; }
+
+        /* ── TARJETAS (Base) ── */
+        .card-container {
+            background: #1a1a22;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        /* ── PANTALLA 1: SELECCIÓN DE PERFIL ── */
+        #profileScreen { max-width: 700px; }
+        .profile-header { text-align: center; margin-bottom: 2rem; }
+        .profile-header h1 { font-size: 22px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+        .profile-header p { font-size: 14px; color: rgba(255, 255, 255, 0.4); }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .profile-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-btn:hover {
+            background: rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .profile-icon {
+            width: 54px; height: 54px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #818cf8;
+        }
+
+        .profile-icon svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .profile-btn h3 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .profile-btn p { font-size: 12px; color: rgba(255, 255, 255, 0.4); }
+        .profile-btn .enter-label {
+            margin-top: 10px; background: #6366f1; color: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; opacity: 0; transition: opacity 0.2s;
+        }
+        .profile-btn:hover .enter-label { opacity: 1; }
+
+        /* ── PANTALLA 2: FORMULARIO LOGIN ── */
+        #loginScreen { max-width: 380px; display: none; }
+        .login-card__icon { width: 48px; height: 48px; background: rgba(99, 102, 241, 0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+        .login-card__icon svg { width: 24px; height: 24px; stroke: #6366f1; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        .login-header h1 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+        .login-header p { font-size: 13px; color: rgba(255, 255, 255, 0.4); }
+
+        .field { margin-bottom: 1.25rem; }
+        .field label { display: block; font-size: 11px; font-weight: 600; color: rgba(255, 255, 255, 0.45); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+        .field__wrap { position: relative; }
+        .field__wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: rgba(255, 255, 255, 0.25); fill: none; stroke-width: 2; pointer-events: none; }
+        .field__wrap input { width: 100%; background: rgba(255, 255, 255, 0.05); border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 10px 12px 10px 38px; font-size: 14px; color: #fff; outline: none; transition: border-color 0.15s, background 0.15s; font-family: inherit; }
+        .field__wrap input:focus { border-color: rgba(99, 102, 241, 0.55); background: rgba(99, 102, 241, 0.06); }
+        .field__forgot { text-align: right; margin-top: -8px; margin-bottom: 1.5rem; }
+        .field__forgot a { font-size: 12px; color: rgba(99, 102, 241, 0.75); text-decoration: none; }
+
+        .alert { background: rgba(220, 38, 38, 0.1); border: 0.5px solid rgba(220, 38, 38, 0.25); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #fca5a5; margin-bottom: 1.25rem; }
+
+        .btn-submit { width: 100%; background: #6366f1; border: none; border-radius: 10px; padding: 11px; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+        .btn-submit:hover { background: #5254cc; }
+        .btn-submit svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+        /* NUEVO: Botón de Crear Cuenta */
+        .btn-secondary { width: 100%; background: transparent; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 11px; font-size: 14px; font-weight: 600; color: rgba(255, 255, 255, 0.8); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; text-decoration: none; margin-top: 1rem; }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.3); color: #fff; }
+        .btn-secondary svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+        .btn-back { display: flex; align-items: center; justify-content: center; gap: 6px; color: rgba(255,255,255,0.5); font-size: 13px; text-decoration: none; margin-top: 1.5rem; cursor: pointer; transition: color 0.2s; }
+        .btn-back:hover { color: #fff; }
+        .btn-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="{% url 'login' %}" class="header__logo">
+            <div class="header__logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6l-8-4z"/></svg>
+            </div>
+            <span class="header__logo-name">Sistema Seguro</span>
+        </a>
+    </header>
+
+    <main>
+        <div class="card-container" id="profileScreen">
+            <div class="profile-header">
+                <h1>Selecciona tu Perfil</h1>
+                <p>Elige tu rol para acceder a las herramientas correspondientes</p>
+            </div>
+
+            <div class="profiles-grid">
+                <div class="profile-btn" onclick="selectRole('Usuario')">
+                    <div class="profile-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div>
+                        <h3>Usuario</h3>
+                        <p>Monitoreo básico</p>
+                    </div>
+                    <div class="enter-label">Ingresar</div>
+                </div>
+
+                <div class="profile-btn" onclick="selectRole('Supervisor')">
+                    <div class="profile-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                    </div>
+                    <div>
+                        <h3>Supervisor</h3>
+                        <p>Gestión de alertas</p>
+                    </div>
+                    <div class="enter-label">Ingresar</div>
+                </div>
+
+                <div class="profile-btn" onclick="selectRole('Administrador')">
+                    <div class="profile-icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </div>
+                    <div>
+                        <h3>Administrador</h3>
+                        <p>Control total</p>
+                    </div>
+                    <div class="enter-label">Ingresar</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" id="loginScreen">
+            <div class="login-card__icon">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+
+            <div class="login-header">
+                <h1 id="loginTitle">Iniciando sesión</h1>
+                <p>Introduce tus credenciales para acceder</p>
+            </div>
+
+            {% if error %}
+            <div class="alert">Usuario o contraseña incorrectos.</div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                <input type="hidden" name="user_role" id="selectedRoleInput" value="">
+
+                <div class="field">
+                    <label>Usuario o correo</label>
+                    <div class="field__wrap">
+                        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <input type="text" name="username" placeholder="admin" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Contraseña</label>
+                    <div class="field__wrap">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="field__forgot"><a href="#">¿Olvidaste tu contraseña?</a></div>
+
+                <button type="submit" class="btn-submit">
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    Ingresar
+                </button>
+            </form>
+
+            <a href="{% url 'usuario_crear' %}" class="btn-secondary" id="registerBtn" style="display: none;">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Crear cuenta
+            </a>
+
+            <div class="btn-back" onclick="goBack()">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                Volver a perfiles
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__inner">
+            <div class="footer__brand"><span>© 2026 <strong>Sistema Seguro</strong></span></div>
+            <span class="footer__copy">Todos los derechos reservados</span>
+        </div>
+    </footer>
+
+    <script>
+        function selectRole(roleName) {
+            document.getElementById('profileScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('loginTitle').innerText = 'Acceso: ' + roleName;
+            document.getElementById('selectedRoleInput').value = roleName;
+
+            // LA MAGIA: Muestra el botón de "Crear cuenta" solo si eliges "Usuario"
+            var registerBtn = document.getElementById('registerBtn');
+            if (roleName === 'Usuario') {
+                registerBtn.style.display = 'flex';
+            } else {
+                registerBtn.style.display = 'none';
+            }
+        }
+
+        function goBack() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('profileScreen').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
