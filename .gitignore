@@ -1,0 +1,16 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Base de datos local de Django
+db.sqlite3
+
+# Configuraciones de editores de código
+.idea/
+.vscode/
+
+# Archivos compilados y caché de Python
+__pycache__/
+*.pyc
+*.pyo
